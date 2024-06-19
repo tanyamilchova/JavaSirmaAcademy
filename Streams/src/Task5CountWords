@@ -1,0 +1,2 @@
+Use BufferedReader to read the file line by line.
+Count lines, split each line into words to count words, and sum the length of lines to count characters.
