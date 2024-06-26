@@ -2,15 +2,9 @@ package org.example;
 
 public class ElectronicItem extends Inventory{
 
-    public ElectronicItem(){
-
-    }
     public ElectronicItem(double price, long quantity, boolean isBreakable, boolean isPerishable, String itemDetails, String name) {
         super(CATEGORY.ELECTRONIC_ITEM, price, quantity, isBreakable, isPerishable, itemDetails,  name);
     }
-
-
-
 
     @Override
     public double calculateValue(double pairs) {

@@ -25,15 +25,15 @@ public  class Inventory extends AbstractItem  {
         }
         list.sort((Comparator.comparingDouble(o -> o.price)));
         System.out.println(list);
-//        list.sort(((o1,o2)->Double.compare(o1.price,o2.price));
+
 
 }
-    public void sotrByName(){
+    public void sortByName(){
         ArrayList<Inventory>list=new ArrayList<>();
         for (Map.Entry<CATEGORY,ArrayList<Inventory>> entry:this.inventoryHashMap.entrySet()){
             list.addAll(entry.getValue());
         }
-        list.sort(Comparator.comparing((o1,o2)->o1.name>o2.n));
+        list.sort((o1,o2)->o1.name.compareTo(o2.name));
     }
     public void sortByCathegory(){
         this.printMap();
@@ -154,6 +154,10 @@ public  class Inventory extends AbstractItem  {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setQuantity(long quantity) {

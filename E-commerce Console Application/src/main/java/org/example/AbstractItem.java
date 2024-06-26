@@ -11,8 +11,6 @@ public abstract class AbstractItem  implements Item, Categorizable, Breakable,Pe
     protected boolean isPerishable;
     protected String itemDetails;
 
-//    public abstract void getItemDetails();
-
         AbstractItem(){
         }
     public AbstractItem(CATEGORY category, double price, long quantity, boolean isBreakable, boolean isPerishable, String itemDetails) {

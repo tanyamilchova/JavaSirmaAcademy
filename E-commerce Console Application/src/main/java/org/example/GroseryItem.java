@@ -6,16 +6,6 @@ public class GroseryItem extends Inventory{
     protected LocalDate expDate;
     protected boolean isSoldByKg;
 
-//    public GroseryItem(long id, String name,  double price, long quantity, boolean isBreakable, boolean isPerishable, String itemDetails, LocalDate expDate, boolean isSoldByKg) {
-//        super(id, name, CATEGORY.GROSSER_ITEM, price, quantity, isBreakable, isPerishable, itemDetails);
-//        this.expDate = expDate;
-//        this.isSoldByKg = isSoldByKg;
-//    }
-
-    public GroseryItem(){
-
-    }
-
     public GroseryItem(double price, long quantity, boolean isBreakable, boolean isPerishable, String itemDetails,  String name, LocalDate expDate, boolean isSoldByKg) {
         super(CATEGORY.GROSSER_ITEM, price, quantity, isBreakable, isPerishable, itemDetails,  name);
         this.expDate = expDate;

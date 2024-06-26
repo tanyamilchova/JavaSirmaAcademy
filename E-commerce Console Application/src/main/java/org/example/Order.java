@@ -18,8 +18,8 @@ public class Order {
 
 
     public  void addItemToOrder(Inventory item){
-        this.itemList.add(item);
-        System.out.println("Order Item List "+this.itemList);
+        itemList.add(item);
+        System.out.println("Order Item List "+ itemList);
     }
 public void orderProduct(Inventory inventory, User user){
 
@@ -30,13 +30,6 @@ public void orderProduct(Inventory inventory, User user){
                 AbstractItem item = itemList.get(i);
                 Inventory.CATEGORY category = AbstractItem.CATEGORY.valueOf(item.getCategory());
                 ArrayList<Inventory> list = inventory.inventoryHashMap.get(category);
-//                for (int j = 0; j < item.quantity; j++) {
-//                    if(! list.isEmpty()) {
-//                        list.remove(list.size() - 1);
-//                    }else {
-//                        System.out.println("Out of stock");
-//                    }
-//                }
                 inventory.inventoryHashMap.put(category, list);
             }
                 user.addOrderToList(user.getCurrentOrser());
@@ -71,6 +64,7 @@ public void orderProduct(Inventory inventory, User user){
     public static void showCart(){
         System.out.println(itemList);
     }
+
 
     @Override
     public String toString() {

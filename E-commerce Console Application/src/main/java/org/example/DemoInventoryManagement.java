@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.io.FileStorage;
+
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -20,12 +22,10 @@ public class DemoInventoryManagement {
             inventory.addToMap(gr2);
         }
         System.out.println();
-
         Scanner sc=new Scanner(System.in);
         displayMenu();
         User user=registerUser(sc);
         while (true) {
-
             chooseAnAction(sc, inventory, user);
         }
     }
@@ -36,8 +36,11 @@ public class DemoInventoryManagement {
         inventory.printMap();
         System.out.println(".............................");
         int choise=Util.getIntInput(sc,"Choose valid action from the menu: ");
-        if(isNumbre(choise)){
+
+        if(isNumber(choise)){
             switch (choise) {
+                case 0->
+                    displayMenu();
                 case 1 -> {
                     System.out.println("Enter a category");
                     AbstractItem.CATEGORY category=Util.getCategoryInput(sc,"Enter a category");
@@ -52,22 +55,6 @@ public class DemoInventoryManagement {
                 case 3 -> {
                     inventory.displayList(Util.getCategoryInput(sc,"Enter a category to display"));
                 }
-//                case 4 -> {
-//                    System.out.println("Create an order");
-//                    Order order = user.createOrder();
-//                    user.setCurrentOrser(order);
-//                }
-//                case 5 -> {
-//                    Order order = user.getCurrentOrser();
-//                    if (Util.checkNotNullOrder(order)) {
-//                        AbstractItem.CATEGORY category = Util.getCategoryInput(sc, "Buy an item: enter the category:  ");
-//                        inventory = inventory.getInventoryItem(category,inventory);
-//                        if(inventory!=null && inventory.getCountFragile()>=0) {
-//                            order.addItemToOrder(inventory);
-//                            System.out.println("Item List: "+order.getItemList());
-//                        }
-//                    }
-//                }
                 case 4 -> {
                     System.out.println("Create an order");
                     Order order = user.createOrder();
@@ -103,7 +90,7 @@ public class DemoInventoryManagement {
                 }
                 case 8 -> {
                     System.out.println("Make a payment");
-                    user.makePayment();
+                    user.makePayment(inventory);
                 }
                 case 9 -> {
                     System.out.println("Your details:");
@@ -120,7 +107,28 @@ public class DemoInventoryManagement {
                 case 12 -> {
                    inventory.sortByPrice();
                 }
+                case 13 -> {
+                    inventory.sortByName();
+                }
+                case 14 -> {
+                    inventory.sortByCathegory();
+                }
+                case 15 -> {
+                    FileStorage fileStorage=new FileStorage();
+                    fileStorage.storeInFile(inventory);
+                }
+                case 16 -> {
+                    FileStorage fileStorage=new FileStorage();
+                    fileStorage.extractMap();
+
+                }
+                case 17 -> {
+                    double money=Util.getDoubleInput(sc,"Enter the amount of money to put in");
+                    user.addMoney(money);
+                }
+
                 default -> {
+                    System.out.println("To see the menu again press 0");
                     System.out.println("Enter a valid number from the menu");
                     choise=Util.getIntInput(sc,"Enter a valid number from the menu");
                 }
@@ -133,9 +141,7 @@ public class DemoInventoryManagement {
     private static User registerUser(Scanner sc) {
         System.out.println("Enter a name");
         String name=sc.nextLine();
-//        System.out.println("Enter  money in the wallet");
         double money=Util.getDoubleInput(sc,"Enter  money in the wallet");
-//        double money=Double.parseDouble(sc.nextLine());
         User user=new User(name,money);
         return user;
     }
@@ -151,15 +157,20 @@ public class DemoInventoryManagement {
                 "Press 6 to to calculate order" +"\n"+
                 "Press 7 order items" +"\n"+
                 "Press 8 to process payment" +"\n"+
-                "Press 9 to see user details"+"\n"
+                "Press 9 to see user details"+"\n"+
+                "Press 10 to see user details"+"\n"+
+                "Press 11 to see cart details"+"\n"+
+                "Press 12 to sort inventories by price"+"\n"+
+                "Press 13 to sort inventories by name"+"\n"+
+                "Press 14 to sort inventories by category"+"\n"+
+                "Press 15 to save inventory to map"+"\n"+
+                "Press 16 to extract the inventory map from the file"+"\n"
+
 
         );
         System.out.println("* To use this application you hae to register yourself");
     }
-    public static boolean isString(Object objects){
-        return objects instanceof String;
-    }
-    public static boolean isNumbre(Object objects){
+    public static boolean isNumber(Object objects){
         return objects instanceof Number;
     }
     public static void askValidInput(){

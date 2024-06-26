@@ -1,7 +1,6 @@
 package org.example;
 
-import com.sun.jdi.PrimitiveValue;
-
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class User {
@@ -22,6 +21,9 @@ public class User {
         this.id=uniqueId++;
     }
 
+    public void addMoney(double money){
+        this.money+=money;
+    }
     public Order createOrder(){
         if(this.currentOrser==null) {
             System.out.println("You opened a new Order");
@@ -37,7 +39,7 @@ public class User {
         this.orders.add(order);
         System.out.println("List with orders: "+this.orders);
     }
-    public void makePayment(){
+    public void makePayment(Inventory inventory){
         if(!orders.isEmpty()) {
             double sum = 0;
             for (Order order : orders) {
@@ -54,9 +56,17 @@ public class User {
                 System.out.println("Your wallet is: " + this.money);
             } else {
                 System.out.println("Not sufficient wallet");
+                for (Order o:orders) {
+                    for (Inventory inv:o.getItemList()){
+                        inventory.addToMap(inv);
+                    }
+                }
+                this.orders=new HashSet<>();
+                Order.itemList=new ArrayList<>();
             }
         }else {
             System.out.println("You have not any Order for payment");
+
         }
     }
     public void getUserDetails(){
