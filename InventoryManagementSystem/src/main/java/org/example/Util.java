@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class Util {
     Scanner sc = new Scanner(System.in);
-
     static double getDoubleInput(Scanner sc, String prompt) {
         while (true) {
             System.out.println(prompt);
@@ -14,6 +13,7 @@ public class Util {
                 return Double.parseDouble(sc.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a valid number.");
+
             }
         }
     }

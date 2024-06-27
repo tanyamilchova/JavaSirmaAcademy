@@ -8,7 +8,9 @@ import java.util.Scanner;
 public class DemoInventoryManagement {
 
     public static void main(String[] args) {
+         PaymentProssesor prossesor=new PaymentProssesor();
         Inventory inventory=new Inventory();
+
         for (int i = 0; i < 1; i++) {
             ElectronicItem el=new ElectronicItem(i+200,1,true,false,"Description"+i,"El"+i+1);
             GroseryItem gr=new GroseryItem(i+150,1,true,false,"Description"+i,"Gr"+i+1, LocalDate.now(),true);
@@ -26,11 +28,11 @@ public class DemoInventoryManagement {
         displayMenu();
         User user=registerUser(sc);
         while (true) {
-            chooseAnAction(sc, inventory, user);
+            chooseAnAction(sc, inventory, user,prossesor);
         }
     }
 
-    private static void chooseAnAction(Scanner sc,Inventory inventory,User user) {
+    private static void chooseAnAction(Scanner sc,Inventory inventory,User user,PaymentProssesor prossesor) {
         System.out.println(".............................");
         System.out.println("Here are the items in stock: ");
         inventory.printMap();
@@ -90,7 +92,7 @@ public class DemoInventoryManagement {
                 }
                 case 8 -> {
                     System.out.println("Make a payment");
-                    user.makePayment(inventory);
+                    user.makePayment(inventory,prossesor);
                 }
                 case 9 -> {
                     System.out.println("Your details:");
@@ -126,6 +128,9 @@ public class DemoInventoryManagement {
                     double money=Util.getDoubleInput(sc,"Enter the amount of money to put in");
                     user.addMoney(money);
                 }
+                case 18 -> {
+                    user.seePayments();
+                }
 
                 default -> {
                     System.out.println("To see the menu again press 0");
@@ -142,7 +147,7 @@ public class DemoInventoryManagement {
         System.out.println("Enter a name");
         String name=sc.nextLine();
         double money=Util.getDoubleInput(sc,"Enter  money in the wallet");
-        User user=new User(name,money);
+        User user=new User(name,money,"email"+Util.generateRandomString(3),"pass"+Util.generateRandomString(4));
         return user;
     }
 
@@ -164,7 +169,9 @@ public class DemoInventoryManagement {
                 "Press 13 to sort inventories by name"+"\n"+
                 "Press 14 to sort inventories by category"+"\n"+
                 "Press 15 to save inventory to map"+"\n"+
-                "Press 16 to extract the inventory map from the file"+"\n"
+                "Press 16 to extract the inventory map from the file"+"\n"+
+                "Press 17 to put money to your wallet"+"\n"+
+                "Press 18 to see payments"+"\n"
 
 
         );

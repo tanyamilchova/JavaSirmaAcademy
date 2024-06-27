@@ -1,28 +1,46 @@
 package org.example;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class User {
+
+
     private long id;
     private String name;
     private double money;
     private static long uniqueId=1;
-    private final HashSet<Payment>payments;
+    private String email;
+    private String password;
+
+    private  HashSet<Payment>payments;
+    private final HashSet<CreditCardPayment>cardPayments;
+    private final HashSet<PayPalPayment>payPalPayments;
+
     private final HashSet<Order>finishedOrders=new HashSet<>();
     private HashSet<Order>orders;
     private Order currentOrser;
+    private CreditCard creditCard;
+    private PayPalAccount payPalAccount;
 
-    public User(String name, double money) {
+
+    public User(String name, double money, String email, String password) {
+        this.id=uniqueId++;
         this.name = name;
         this.money = money;
+        this.email = email;
+        this.password = password;
         this.orders=new HashSet<>();
+        this.cardPayments=new HashSet<>();
+        this.payPalPayments=new HashSet<>();
         this.payments=new HashSet<>();
-        this.id=uniqueId++;
     }
 
     public void addMoney(double money){
         this.money+=money;
+        System.out.println("Your wallet now is: "+this.money);
     }
     public Order createOrder(){
         if(this.currentOrser==null) {
@@ -39,36 +57,62 @@ public class User {
         this.orders.add(order);
         System.out.println("List with orders: "+this.orders);
     }
-    public void makePayment(Inventory inventory){
+    public void makePayment(Inventory inventory, PaymentProssesor processor){
         if(!orders.isEmpty()) {
             double sum = 0;
             for (Order order : orders) {
                 sum += order.calculateTootalSumOrder();
             }
-            if (this.money >= sum) {
-                Payment payment = new Payment(this.id);
-                payment.setTotal(sum);
-                payments.add(payment);
-                this.money -= sum;
-                finishedOrders.addAll(orders);
-                this.orders=new HashSet<>();
-                System.out.println("You have just made a payment for " + sum);
-                System.out.println("Your wallet is: " + this.money);
-            } else {
-                System.out.println("Not sufficient wallet");
-                for (Order o:orders) {
-                    for (Inventory inv:o.getItemList()){
-                        inventory.addToMap(inv);
-                    }
-                }
-                this.orders=new HashSet<>();
-                Order.itemList=new ArrayList<>();
-            }
-        }else {
-            System.out.println("You have not any Order for payment");
 
+            Payment payment = choosePayment(Util.getTypeInput(new Scanner(System.in), "Choose a payment method"),processor);
+            payment.setProssesor(processor);
+
+            if (payment.authorisePayment(payment, this)) {
+                if (this.money >= sum) {
+                    payment.setTotal(sum);
+
+                    payments.add(payment);
+
+                    this.money -= sum;
+                    finishedOrders.addAll(orders);
+                    this.orders = new HashSet<>();
+                    System.out.println("You have just made a payment for " + sum);
+                    System.out.println("Your wallet is: " + this.money);
+                } else {
+                    System.out.println("Not sufficient wallet");
+                    for (Order o : orders) {
+                        for (Inventory inv : o.getItemList()) {
+                            inventory.addToMap(inv);
+                        }
+                    }
+                    this.orders = new HashSet<>();
+                    Order.itemList = new ArrayList<>();
+                }
+            }else {
+                System.out.println("Unauthorised");
+            }
+            } else {
+                System.out.println("You have not any Order for payment");
+
+            }
+
+    }
+    public Payment choosePayment(Payment.Type paimentType,PaymentProssesor prossesor){
+        if(paimentType.equals(Payment.Type.PAYPAL)) {
+            if(this.payPalAccount==null) {
+                this.payPalAccount = new PayPalAccount(this.email,this.password);
+                prossesor.addToMapPaypalAccount(payPalAccount);
+            }
+            return new PayPalPayment(this.id, LocalDate.now(), paimentType, this.email, this.password);
+        } else {
+            if(this.creditCard==null) {
+                this.creditCard = new CreditCard(Util.generateRandomString(16), this.name, LocalDate.now().minusMonths(12), Util.generateRandomString(3));
+                prossesor.addToMapCreditCard(creditCard);
+            }
+            return new CreditCardPayment(this.id,LocalDate.now(),paimentType,this.creditCard.getCardNumber(),this.creditCard.getSvvCode(),this.creditCard.getExpDate());
         }
     }
+
     public void getUserDetails(){
         System.out.println("Id:"+this.id);
         System.out.println("Wallet: "+this.money);
@@ -78,10 +122,13 @@ public class User {
         System.out.println("Your payments "+this.payments);
     }
 
-    public long getId() {
-        return id;
+    public CreditCard getCreditCard() {
+        return creditCard;
     }
 
+    public PayPalAccount getPayPalAccount() {
+        return payPalAccount;
+    }
     public HashSet<Order> getOrders() {
         return orders;
     }
@@ -93,8 +140,9 @@ public class User {
     public Order getCurrentOrser() {
         return currentOrser;
     }
-
-    public HashSet<Order> getFinishedOrders() {
-        return finishedOrders;
+    public void seePayments(){
+        for (Payment payment:payments){
+            System.out.println(payment.type+":"+payment.total);
+        }
     }
 }

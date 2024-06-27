@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Util {
@@ -56,6 +57,21 @@ public class Util {
             }
         }
     }
+    static Payment.Type getTypeInput(Scanner sc, String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            String input = sc.nextLine();
+            ArrayList<String>enumValues=new ArrayList<>(List.of("CREDIT_CARD,PAYPAL"));
+            try {
+                if(! enumValues.contains(input)){
+                    System.out.println("The valid categories are: CREDIT_CARD,PAYPAL");
+                }
+                return Payment.Type.valueOf(input);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Enter a valid category: CREDIT_CARD,PAYPAL");
+            }
+        }
+    }
 
     public static int getIntInput(Scanner sc, String prompt) {
         while (true){
@@ -74,4 +90,14 @@ public class Util {
        return order!=null;
     }
 
+    public static String generateRandomString(int number) {
+        Random random = new Random();
+        StringBuilder cardNumber = new StringBuilder();
+
+        for (int i = 0; i < number; i++) {
+            int digit = random.nextInt(10);
+            cardNumber.append(digit);
+        }
+        return cardNumber.toString();
+    }
 }
