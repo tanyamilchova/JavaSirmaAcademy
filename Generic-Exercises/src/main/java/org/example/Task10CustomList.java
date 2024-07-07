@@ -76,6 +76,7 @@ public class Task10CustomList<T> {
                      int pos2=Integer.parseInt(arrInput[2].trim());
                      customListt.swap(pos1,pos2);
                      System.out.println(customListt.list);
+                     List<Integer>list=new ArrayList<>();
                 }
                 case "Contains"->{
                     String element=arrInput[1].trim();
