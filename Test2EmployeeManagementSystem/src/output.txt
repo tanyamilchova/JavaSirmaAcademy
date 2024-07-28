@@ -1,0 +1,4 @@
+1,Pepi,IT,Developer,2000.0
+2,Rosen,HR,Manager,5000.0
+3,Ivanka,HR,Manager,5000.0
+5,p,d,p,20000.0
